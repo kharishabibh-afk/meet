@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11101a">
+  <title>Meet — Teman AI Kamu</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      color-scheme: dark;
+      --bg: #11101a;
+      --panel: #191824;
+      --purple: #a795ff;
+      --text: #f5f2ff;
+      --muted: #9995ac;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    header {
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #292736;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      background: linear-gradient(135deg, #c4a9ff, #6550a9);
+      box-shadow: 0 0 25px #a795ff25;
+    }
+
+    .identity { flex: 1; min-width: 0; }
+
+    .identity h1 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .identity p {
+      font-size: 12px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .status {
+      width: 7px;
+      height: 7px;
+      display: inline-block;
+      background: #6cdda6;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      scroll-behavior: smooth;
+    }
+
+    .welcome {
+      text-align: center;
+      margin: auto 0;
+      padding: 20px 10px;
+    }
+
+    .welcome .big {
+      font-size: 66px;
+      margin-bottom: 14px;
+    }
+
+    .welcome h2 {
+      font-size: 23px;
+      margin: 0 0 10px;
+    }
+
+    .welcome p {
+      max-width: 310px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      max-width: 88%;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .mini-avatar {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #29253d;
+      font-size: 16px;
+    }
+
+    .user .mini-avatar { background: #493b72; }
+
+    .bubble {
+      padding: 11px 14px;
+      background: var(--panel);
+      border: 1px solid #292736;
+      border-radius: 5px 17px 17px 17px;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .user .bubble {
+      background: #51417d;
+      border-color: #51417d;
+      border-radius: 17px 5px 17px 17px;
+    }
+
+    .typing {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 0;
+    }
+
+    .suggestions {
+      padding: 0 14px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .suggestions button {
+      white-space: nowrap;
+      color: #d8d0ff;
+      border: 1px solid #39334d;
+      border-radius: 20px;
+      padding: 9px 12px;
+      background: #1a1825;
+      font-size: 12px;
+    }
+
+    .composer {
+      padding: 12px 14px max(14px, env(safe-area-inset-bottom));
+      border-top: 1px solid #292736;
+      background: #15141e;
+    }
+
+    .input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+      padding: 8px;
+      border: 1px solid #393447;
+      border-radius: 22px;
+      background: #201e2b;
+    }
+
+    textarea {
+      flex: 1;
+      min-width: 0;
+      resize: none;
+      max-height: 120px;
+      border: 0;
+      outline: none;
+      color: var(--text);
+      background: transparent;
+      padding: 9px 7px;
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    textarea::placeholder { color: #858094; }
+
+    #send {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #171222;
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    #send:disabled { opacity: .5; }
+
+    .note {
+      text-align: center;
+      font-size: 10px;
+      color: #777286;
+      margin: 9px 0 0;
+    }
+
+    button { cursor: pointer; }
+    button:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header>
+      <div class="avatar">🤖</div>
+      <div class="identity">
+        <h1>Meet</h1>
+        <p><span class="status"></span>Robot AI perempuan</p>
+      </div>
+    </header>
+
+    <section id="messages" aria-live="polite">
+      <div class="welcome" id="welcome">
+        <div class="big">🤖💜</div>
+        <h2>Hai, aku Meet!</h2>
+        <p>
+          Aku robot AI perempuan yang siap menemani obrolanmu.
+          Kamu bebas cerita atau bertanya apa saja.
+        </p>
+      </div>
+    </section>
+
+    <div class="suggestions" id="suggestions">
+      <button data-message="Hai Meet, kenalan yuk.">Kenalan yuk</button>
+      <button data-message="Aku pengin cerita sesuatu.">Aku mau cerita</button>
+      <button data-message="Coba ceritain sesuatu yang menarik.">Bikin aku penasaran</button>
+    </div>
+
+    <form class="composer" id="chatForm">
+      <div class="input-box">
+        <textarea
+          id="input"
+          rows="1"
+          maxlength="4000"
+          placeholder="Tulis pesan buat Meet..."
+          aria-label="Pesan untuk Meet"
+        ></textarea>
+        <button id="send" type="submit" aria-label="Kirim pesan">↑</button>
+      </div>
+      <p class="note">Meet adalah robot AI, bukan manusia.</p>
+    </form>
+  </main>
+
+  <script>
+    const messagesEl = document.getElementById("messages");
+    const welcomeEl = document.getElementById("welcome");
+    const input = document.getElementById("input");
+    const form = document.getElementById("chatForm");
+    const sendButton = document.getElementById("send");
+    const suggestions = document.getElementById("suggestions");
+
+    const history = [];
+    let busy = false;
+
+    function addMessage(role, text) {
+      welcomeEl?.remove();
+      suggestions.hidden = true;
+
+      const row = document.createElement("div");
+      row.className = "message " + (role === "user" ? "user" : "assistant");
+
+      const avatar = document.createElement("div");
+      avatar.className = "mini-avatar";
+      avatar.textContent = role === "user" ? "🙂" : "🤖";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      row.append(avatar, bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      return row;
+    }
+
+    async function sendMessage(text) {
+      text = text.trim();
+
+      if (!text || busy) return;
+
+      busy = true;
+      sendButton.disabled = true;
+      input.value = "";
+      input.style.height = "auto";
+
+      addMessage("user", text);
+      history.push({ role: "user", content: text });
+
+      const typing = addMessage("assistant", "Meet sedang mengetik...");
+      typing.querySelector(".bubble").classList.add("typing");
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: history.slice(-12),
+            characterName: "Meet",
+            characterGender: "Perempuan"
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Layanan AI belum siap.");
+        }
+
+        const reply =
+          data.response ||
+          data.reply ||
+          data.result?.response ||
+          data.result?.choices?.[0]?.message?.content;
+
+        if (typeof reply !== "string" || !reply.trim()) {
+          throw new Error("AI belum mengirim jawaban yang bisa dibaca.");
+        }
+
+        typing.querySelector(".bubble").textContent = reply;
+        typing.querySelector(".bubble").classList.remove("typing");
+        history.push({ role: "assistant", content: reply });
+
+      } catch (error) {
+        typing.querySelector(".bubble").textContent =
+          "Maaf, aku belum bisa terhubung ke AI. Endpoint /api/chat mungkin belum tersedia. Coba lagi setelah koneksi AI disiapkan.";
+        console.error("Meet chat error:", error);
+      } finally {
+        busy = false;
+        sendButton.disabled = false;
+        input.focus();
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      sendMessage(input.value);
+    });
+
+    input.addEventListener("input", () => {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 120) + "px";
+    });
+
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    suggestions.addEventListener("click", event => {
+      const button = event.target.closest("button[data-message]");
+      if (button) sendMessage(button.dataset.message);
+    });
+  </script>
+</body>
+</html>
