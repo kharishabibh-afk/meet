@@ -387,7 +387,7 @@ button:focus-visible,textarea:focus-visible{
 <div id="voiceStatus" role="status" aria-live="polite"></div>
 <div class="voice-controls">
   <button class="voice-control" id="autoSpeakButton" type="button"
-    aria-pressed="true">🔊 Suara balasan: Aktif</button>
+    aria-pressed="false">🔇 Suara balasan: Mati</button>
   <button class="voice-control" id="stopSpeechButton" type="button">⏹ Hentikan suara</button>
 </div>
 
@@ -459,7 +459,7 @@ let fileText="";
 let fileIsImage=false;
 let isReadingFile=false;
 let generatedMediaUrls=[];
-let autoSpeak=true;
+let autoSpeak=false;
 let recognition=null;
 let isListening=false;
 let voiceBaseText="";
